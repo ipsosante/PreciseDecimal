@@ -9,7 +9,7 @@ final class PreciseDecimalTests: XCTestCase {
         try assert("+NaN", "0")
         try assert("-abc", "0")
         try assert("+abc", "0")
-        
+
         try assert("0")
         try assert("1")
         try assert("2")
@@ -51,14 +51,86 @@ final class PreciseDecimalTests: XCTestCase {
         try assertNil("abc")
         try assertNil("NaN")
     }
+
+    func testZero() throws {
+        try assert(PreciseDecimal("0"), "0")
+        try assert(PreciseDecimal.zero, "0")
+        XCTAssertEqual(PreciseDecimal.zero, PreciseDecimal("0"))
+        try assert(PreciseDecimal.zero, Decimal(string: "0"))
+        try assert(PreciseDecimal.zero, Decimal.zero)
+    }
+
+    func testAddition() throws {
+        try assert(PreciseDecimal("1") + PreciseDecimal("1"), "2")
+        try assert(PreciseDecimal("1") + PreciseDecimal("3"), "4")
+        try assert(PreciseDecimal("3") + PreciseDecimal("1"), "4")
+        try assert(PreciseDecimal("1") + PreciseDecimal("30"), "31")
+        try assert(PreciseDecimal("1.12454") + PreciseDecimal("3.98389"), "5.10843")
+        try assert(PreciseDecimal("19743.32") + PreciseDecimal("765.12873"), "20508.44873")
+    }
+
+    func testAdditionOfNegativeNumbers() throws {
+        try assert(PreciseDecimal("-1") + PreciseDecimal("1"), "0")
+        try assert(PreciseDecimal("-1") + PreciseDecimal("3"), "2")
+        try assert(PreciseDecimal("-3") + PreciseDecimal("1"), "-2")
+        try assert(PreciseDecimal("-1") + PreciseDecimal("30"), "29")
+        try assert(PreciseDecimal("-1.12454") + PreciseDecimal("3.98389"), "2.85935")
+        try assert(PreciseDecimal("-19743.32") + PreciseDecimal("765.12873"), "-18978.19127")
+    }
+
+    func testSubstraction() throws {
+        try assert(PreciseDecimal("1") - PreciseDecimal("1"), "0")
+        try assert(PreciseDecimal("1") - PreciseDecimal("3"), "-2")
+        try assert(PreciseDecimal("3") - PreciseDecimal("1"), "2")
+        try assert(PreciseDecimal("1") - PreciseDecimal("30"), "-29")
+        try assert(PreciseDecimal("1.12454") - PreciseDecimal("3.98389"), "-2.85935")
+        try assert(PreciseDecimal("19743.32") - PreciseDecimal("765.12873"), "18978.19127")
+    }
+
+    func testSubstractionOfNegativeNumbers() throws {
+        try assert(PreciseDecimal("-1") - PreciseDecimal("1"), "-2")
+        try assert(PreciseDecimal("-1") - PreciseDecimal("3"), "-4")
+        try assert(PreciseDecimal("-3") - PreciseDecimal("1"), "-4")
+        try assert(PreciseDecimal("-1") - PreciseDecimal("30"), "-31")
+        try assert(PreciseDecimal("-1.12454") - PreciseDecimal("3.98389"), "-5.10843")
+        try assert(PreciseDecimal("-19743.32") - PreciseDecimal("765.12873"), "-20508.44873")
+    }
+
+    func testMultiplication() throws {
+        try assert(PreciseDecimal("1") * PreciseDecimal("0"), "0")
+        try assert(PreciseDecimal("1") * PreciseDecimal("1"), "1")
+        try assert(PreciseDecimal("1") * PreciseDecimal("3"), "3")
+        try assert(PreciseDecimal("3") * PreciseDecimal("1"), "3")
+        try assert(PreciseDecimal("2") * PreciseDecimal("30"), "60")
+        try assert(PreciseDecimal("1.12454") * PreciseDecimal("3.98389"), "4.4800436606")
+        try assert(PreciseDecimal("19743.32") * PreciseDecimal("765.12873"), "15106181.3575836")
+    }
+
+    func testMultiplicationOfNegativeNumbers() throws {
+        try assert(PreciseDecimal("-1") * PreciseDecimal("0"), "0")
+        try assert(PreciseDecimal("-1") * PreciseDecimal("1"), "-1")
+        try assert(PreciseDecimal("-1") * PreciseDecimal("3"), "-3")
+        try assert(PreciseDecimal("-3") * PreciseDecimal("1"), "-3")
+        try assert(PreciseDecimal("-2") * PreciseDecimal("30"), "-60")
+        try assert(PreciseDecimal("-1.12454") * PreciseDecimal("3.98389"), "-4.4800436606")
+        try assert(PreciseDecimal("-19743.32") * PreciseDecimal("765.12873"), "-15106181.3575836")
+    }
 }
 
 private extension PreciseDecimalTests {
+    func assert(_ preciseDecimal: PreciseDecimal, _ expected: Decimal?, line: UInt = #line) throws {
+        XCTAssertEqual(preciseDecimal.value, try XCTUnwrap(expected), line: line)
+    }
+
+    func assert(_ preciseDecimal: PreciseDecimal, _ expected: String, line: UInt = #line) throws {
+        XCTAssertEqual(preciseDecimal.value, Decimal(string: expected), line: line)
+    }
+
     func assert(_ sut: StringLiteralType, _ expected: String, line: UInt = #line) throws {
         let normalSUT = try XCTUnwrap(PreciseDecimal(string: sut))
         let literalSUT = PreciseDecimal(stringLiteral: sut)
-        XCTAssertEqual(normalSUT.value, Decimal(string: sut), line: line)
-        XCTAssertEqual(literalSUT.value, Decimal(string: sut), line: line)
+        XCTAssertEqual(normalSUT.value, Decimal(string: expected), line: line)
+        XCTAssertEqual(literalSUT.value, Decimal(string: expected), line: line)
     }
 
     func assert(_ sut: StringLiteralType, line: UInt = #line) throws {
