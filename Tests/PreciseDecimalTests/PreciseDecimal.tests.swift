@@ -115,6 +115,50 @@ final class PreciseDecimalTests: XCTestCase {
         try assert(PreciseDecimal("-1.12454") * PreciseDecimal("3.98389"), "-4.4800436606")
         try assert(PreciseDecimal("-19743.32") * PreciseDecimal("765.12873"), "-15106181.3575836")
     }
+
+    // MARK: - Comparable
+
+    func testLessThan() throws {
+        XCTAssertFalse(PreciseDecimal("1") < PreciseDecimal("0"))
+        XCTAssertFalse(PreciseDecimal("1") < PreciseDecimal("1"))
+        XCTAssertTrue(PreciseDecimal("1") < PreciseDecimal("3"))
+        XCTAssertFalse(PreciseDecimal("3") < PreciseDecimal("1"))
+        XCTAssertTrue(PreciseDecimal("2") < PreciseDecimal("30"))
+        XCTAssertTrue(PreciseDecimal("1.12454") < PreciseDecimal("3.98389"))
+        XCTAssertFalse(PreciseDecimal("19743.32") < PreciseDecimal("765.12873"))
+    }
+
+    func testLessThanOrEqual() throws {
+        XCTAssertFalse(PreciseDecimal("1") <= PreciseDecimal("0"))
+        XCTAssertTrue(PreciseDecimal("1") <= PreciseDecimal("1"))
+        XCTAssertTrue(PreciseDecimal("1") <= PreciseDecimal("3"))
+        XCTAssertFalse(PreciseDecimal("3") <= PreciseDecimal("1"))
+        XCTAssertTrue(PreciseDecimal("2") <= PreciseDecimal("30"))
+        XCTAssertTrue(PreciseDecimal("1.12454") <= PreciseDecimal("3.98389"))
+        XCTAssertFalse(PreciseDecimal("19743.32") <= PreciseDecimal("765.12873"))
+        XCTAssertTrue(PreciseDecimal("8784.3276") <= PreciseDecimal("8784.3276"))
+    }
+
+    func testGreaterThan() throws {
+        XCTAssertTrue(PreciseDecimal("1") > PreciseDecimal("0"))
+        XCTAssertFalse(PreciseDecimal("1") > PreciseDecimal("1"))
+        XCTAssertFalse(PreciseDecimal("1") > PreciseDecimal("3"))
+        XCTAssertTrue(PreciseDecimal("3") > PreciseDecimal("1"))
+        XCTAssertFalse(PreciseDecimal("2") > PreciseDecimal("30"))
+        XCTAssertFalse(PreciseDecimal("1.12454") > PreciseDecimal("3.98389"))
+        XCTAssertTrue(PreciseDecimal("19743.32") > PreciseDecimal("765.12873"))
+    }
+
+    func testGreaterThanOrEqual() throws {
+        XCTAssertTrue(PreciseDecimal("1") >= PreciseDecimal("0"))
+        XCTAssertTrue(PreciseDecimal("1") >= PreciseDecimal("1"))
+        XCTAssertFalse(PreciseDecimal("1") >= PreciseDecimal("3"))
+        XCTAssertTrue(PreciseDecimal("3") >= PreciseDecimal("1"))
+        XCTAssertFalse(PreciseDecimal("2") >= PreciseDecimal("30"))
+        XCTAssertFalse(PreciseDecimal("1.12454") >= PreciseDecimal("3.98389"))
+        XCTAssertTrue(PreciseDecimal("19743.32") >= PreciseDecimal("765.12873"))
+        XCTAssertTrue(PreciseDecimal("8784.3276") >= PreciseDecimal("8784.3276"))
+    }
 }
 
 private extension PreciseDecimalTests {

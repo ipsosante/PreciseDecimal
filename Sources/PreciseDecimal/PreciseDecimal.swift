@@ -1,6 +1,6 @@
 import Foundation
 
-public struct PreciseDecimal: Hashable, Numeric {
+public struct PreciseDecimal: Hashable, Numeric, Comparable {
     public typealias Magnitude = Decimal.Magnitude
     public typealias IntegerLiteralType = Int
 
@@ -47,5 +47,11 @@ public struct PreciseDecimal: Hashable, Numeric {
 
     public static func *= (lhs: inout PreciseDecimal, rhs: PreciseDecimal) {
         lhs.value = lhs.value * rhs.value
+    }
+
+    // MARK: - Comparable
+
+    public static func < (lhs: PreciseDecimal, rhs: PreciseDecimal) -> Bool {
+        lhs.value < rhs.value
     }
 }
