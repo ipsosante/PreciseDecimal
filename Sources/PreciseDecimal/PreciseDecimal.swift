@@ -6,7 +6,7 @@ public struct PreciseDecimal: Hashable, Numeric, Comparable {
 
     public static var zero = PreciseDecimal("0")
 
-    public var value: Decimal
+    public private(set) var value: Decimal
 
     public var magnitude: Decimal.Magnitude {
         value.magnitude
@@ -21,6 +21,18 @@ public struct PreciseDecimal: Hashable, Numeric, Comparable {
 
     public init(integerLiteral value: Int) {
         self.value = Decimal(integerLiteral: value)
+    }
+
+    /// This is a dangerous initializer. If `value` has been initialized incorrectly the loss in precision will
+    /// trickle down to this object too.
+    public init(value: Decimal) {
+        self.value = value
+    }
+
+    /// This is a dangerous initializer. If `significand` has been initialized incorrectly the loss in precision will
+    /// trickle down to this object too.
+    public init(sign: FloatingPointSign, exponent: Int, significand: Int) {
+        self.value = Decimal(sign: sign, exponent: exponent, significand: Decimal(significand))
     }
 
     public init?<T>(exactly source: T) where T: BinaryInteger {

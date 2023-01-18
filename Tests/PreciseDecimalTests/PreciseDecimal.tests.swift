@@ -159,6 +159,36 @@ final class PreciseDecimalTests: XCTestCase {
         XCTAssertTrue(PreciseDecimal("19743.32") >= PreciseDecimal("765.12873"))
         XCTAssertTrue(PreciseDecimal("8784.3276") >= PreciseDecimal("8784.3276"))
     }
+
+    // MARK: - Decimal initializers
+
+    func testInitFromDecimal() throws {
+        try assert(PreciseDecimal(value: try XCTUnwrap(Decimal(string: "0"))), "0")
+        try assert(PreciseDecimal(value: try XCTUnwrap(Decimal(string: "1"))), "1")
+        try assert(PreciseDecimal(value: try XCTUnwrap(Decimal(string: "-1"))), "-1")
+        try assert(PreciseDecimal(value: try XCTUnwrap(Decimal(string: "2"))), "2")
+        try assert(PreciseDecimal(value: try XCTUnwrap(Decimal(string: "1342"))), "1342")
+        try assert(PreciseDecimal(value: try XCTUnwrap(Decimal(string: "1.12454"))), "1.12454")
+        try assert(PreciseDecimal(value: try XCTUnwrap(Decimal(string: "-384.546"))), "-384.546")
+        try assert(PreciseDecimal(value: try XCTUnwrap(Decimal(string: "19743.32"))), "19743.32")
+        try assert(PreciseDecimal(value: try XCTUnwrap(Decimal(string: "8784.3276"))), "8784.3276")
+    }
+
+    func testInitFromSignExponentSignificand() throws {
+        try assert(PreciseDecimal(sign: .plus, exponent: 0, significand: 0), "0")
+        try assert(PreciseDecimal(sign: .plus, exponent: 0, significand: 1), "1")
+        try assert(PreciseDecimal(sign: .minus, exponent: 0, significand: 1), "-1")
+        try assert(PreciseDecimal(sign: .plus, exponent: 0, significand: 2), "2")
+        try assert(PreciseDecimal(sign: .plus, exponent: 0, significand: 1342), "1342")
+        try assert(PreciseDecimal(sign: .plus, exponent: -5, significand: 112454), "1.12454")
+        try assert(PreciseDecimal(sign: .minus, exponent: -3, significand: 384546), "-384.546")
+        try assert(PreciseDecimal(sign: .plus, exponent: -2, significand: 1974332), "19743.32")
+        try assert(PreciseDecimal(sign: .plus, exponent: -4, significand: 87843276), "8784.3276")
+        try assert(PreciseDecimal(sign: .plus, exponent: -6, significand: 23467), "0.023467")
+        try assert(PreciseDecimal(sign: .plus, exponent: -5, significand: 4), "0.00004")
+        try assert(PreciseDecimal(sign: .plus, exponent: 2, significand: 6), "600")
+        try assert(PreciseDecimal(sign: .plus, exponent: 3, significand: 435), "435000")
+    }
 }
 
 private extension PreciseDecimalTests {
